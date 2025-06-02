@@ -47,4 +47,5 @@ If you don’t know something, say "I’m not sure, but you can always call us a
   }
 });
 
-app.listen(5000, () => console.log('Chatbot server running on http://localhost:5000'));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Chatbot server running on port ${PORT}`));
