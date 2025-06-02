@@ -8,7 +8,7 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cors({
-  origin: 'https://amw-cooling-heating-chatbot-server-production.up.railway.app/api/chat', // Replace with actual URL
+  origin: 'https://amw-cooling-heating.vercel.app',
 }));
 
 const openai = new OpenAI({
