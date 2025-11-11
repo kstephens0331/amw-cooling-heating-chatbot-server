@@ -7,8 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Initialize Anthropic client
+const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+console.log('🔑 API Key detected:', apiKey ? `${apiKey.substring(0, 12)}...${apiKey.substring(apiKey.length - 4)}` : 'MISSING');
 const anthropic = new Anthropic({
-  apiKey: process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY,
+  apiKey: apiKey,
 });
 
 // Initialize email transporter
