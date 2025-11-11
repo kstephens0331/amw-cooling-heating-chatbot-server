@@ -101,7 +101,10 @@ app.post('/api/chat', async (req, res) => {
   try {
     const { history, userMessage } = req.body;
 
+    console.log('📥 Incoming request:', { userMessage, historyLength: history?.length });
+
     if (!userMessage || !history) {
+      console.error('❌ Missing fields:', { userMessage: !!userMessage, history: !!history });
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
@@ -110,6 +113,8 @@ app.post('/api/chat', async (req, res) => {
       role: msg.role === 'assistant' ? 'assistant' : 'user',
       content: msg.content
     }));
+
+    console.log('🔄 Calling Claude API with', messages.length, 'messages');
 
     // Call Claude API
     const response = await anthropic.messages.create({
@@ -122,9 +127,16 @@ app.post('/api/chat', async (req, res) => {
     // Extract response text
     const botReply = response.content[0].text;
 
+    console.log('✅ Claude API success, reply length:', botReply.length);
     res.json({ message: botReply });
   } catch (error) {
-    console.error('Claude API Error:', error);
+    console.error('❌ Claude API Error Details:', {
+      message: error.message,
+      status: error.status,
+      type: error.type,
+      code: error.code,
+      stack: error.stack
+    });
     res.status(500).json({
       error: 'Failed to get response from chatbot',
       message: 'Please try again or call us at (936) 331-1339 for immediate assistance.'
