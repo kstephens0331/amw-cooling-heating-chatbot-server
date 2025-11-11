@@ -7,8 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Initialize Anthropic client
-const apiKey = process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY;
+const apiKey = (process.env.CLAUDE_API_KEY || process.env.ANTHROPIC_API_KEY)?.trim();
 console.log('🔑 API Key detected:', apiKey ? `${apiKey.substring(0, 12)}...${apiKey.substring(apiKey.length - 4)}` : 'MISSING');
+console.log('🔑 API Key length:', apiKey?.length);
+console.log('🔑 API Key starts with sk-ant:', apiKey?.startsWith('sk-ant'));
 const anthropic = new Anthropic({
   apiKey: apiKey,
 });
