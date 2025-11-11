@@ -189,6 +189,45 @@ ${new Date().toLocaleString('en-US', { timeZone: 'America/Chicago' })}
   }
 });
 
+// Email endpoint for chat history when chat is closed
+app.post('/api/send-chat-history', async (req, res) => {
+  try {
+    const { chatHistory, timestamp } = req.body;
+
+    if (!chatHistory) {
+      return res.status(400).json({ error: 'Chat history is required' });
+    }
+
+    const emailSubject = 'AMW Website - Chatbot Conversation History';
+
+    const emailBody = `
+Chat Conversation History
+
+Timestamp: ${timestamp}
+
+Conversation:
+${chatHistory}
+
+---
+Sent from AMW Cooling & Heating chatbot
+    `;
+
+    await transporter.sendMail({
+      from: process.env.GMAIL_USER,
+      to: 'admin@amwairconditioning.com',
+      subject: emailSubject,
+      text: emailBody,
+    });
+
+    res.json({ success: true, message: 'Chat history sent successfully' });
+  } catch (error) {
+    console.error('Chat History Email Error:', error);
+    res.status(500).json({
+      error: 'Failed to send chat history',
+    });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🤖 AMW Chatbot server running on port ${PORT}`);
   console.log(`📡 Using Claude API (claude-3-haiku-20240307)`);
